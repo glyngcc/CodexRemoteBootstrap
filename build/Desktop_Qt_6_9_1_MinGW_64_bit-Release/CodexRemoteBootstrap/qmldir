@@ -1,0 +1,5 @@
+module CodexRemoteBootstrap
+typeinfo appCodexRemoteBootstrap.qmltypes
+prefer :/qt/qml/CodexRemoteBootstrap/
+Main 1.0 Main.qml
+

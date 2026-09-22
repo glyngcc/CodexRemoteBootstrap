@@ -1,0 +1,3 @@
+set(__QT_DEPLOY_TARGET_appCodexRemoteBootstrap_FILE D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/appCodexRemoteBootstrap.exe)
+set(__QT_DEPLOY_TARGET_appCodexRemoteBootstrap_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_appCodexRemoteBootstrap_RUNTIME_DLLS D:/Qt/6.9.1/mingw_64/bin/Qt6QuickControls2.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Concurrent.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6QuickTemplates2.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Quick.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6QmlMeta.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6QmlWorkerScript.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6OpenGL.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Gui.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6QmlModels.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Qml.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Network.dll;D:/Qt/6.9.1/mingw_64/bin/Qt6Core.dll)

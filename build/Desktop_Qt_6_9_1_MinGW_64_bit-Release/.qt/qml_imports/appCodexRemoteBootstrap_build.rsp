@@ -1,0 +1,14 @@
+-rootPath
+D:/work/CodexRemoteBootstrap
+-cmake-output
+-output-file
+D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/.qt/qml_imports/appCodexRemoteBootstrap_build.cmake
+-importPath
+D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/CodexRemoteBootstrap
+-importPath
+D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release
+-importPath
+D:/Qt/6.9.1/mingw_64/qml
+-qrcFiles
+D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/.qt/rcc/qmake_CodexRemoteBootstrap.qrc
+D:/work/CodexRemoteBootstrap/build/Desktop_Qt_6_9_1_MinGW_64_bit-Release/.qt/rcc/appCodexRemoteBootstrap_raw_qml_0.qrc
