@@ -159,7 +159,7 @@ cmake --build build --config Release
 ./scripts/package-windows.ps1 -BuildDir ./build -SourceDir . -Config Release
 ```
 
-CI 固定使用 **Qt 6.8.3 + MSVC 2022 x64**。本机可以使用更高的 6.8/6.9 Kit，但发布包以 CI 为准。
+CI 固定使用 **windows-2022 + Qt 6.8.3 + MSVC 2022 x64**（`windows-latest` 现已是 VS 2026）。本机可以使用更高的 6.8/6.9 Kit，但发布包以 CI 为准。
 
 ## Windows 前置条件
 

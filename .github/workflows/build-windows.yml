@@ -23,7 +23,9 @@ permissions:
 jobs:
   build:
     name: Windows x64
-    runs-on: windows-latest
+    # windows-latest is VS 2026 only since June 2026. Pin to 2022 so the
+    # Visual Studio 17 generator matches Qt 6.8.3 win64_msvc2022_64.
+    runs-on: windows-2022
     outputs:
       app-version: ${{ steps.version.outputs.version }}
       artifact-name: CodexRemoteBootstrap-Windows-x64
