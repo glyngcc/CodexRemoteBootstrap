@@ -1,0 +1,29 @@
+# Build trees
+build/
+cmake-build-*/
+out/
+.qt/
+
+# Packaging output
+dist/
+artifacts/
+
+# Local Codex CLI cache (never ship these)
+packages/
+
+# Qt Creator
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+*.user
+*.autosave
+.qtc_clangd/
+
+# Visual Studio / CMake
+.vs/
+CMakeUserPresets.json
+compile_commands.json
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

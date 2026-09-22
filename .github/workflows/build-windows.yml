@@ -1,0 +1,88 @@
+name: Build Windows x64
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+  workflow_call:
+    outputs:
+      app-version:
+        description: Application version from CMakeLists.txt
+        value: ${{ jobs.build.outputs.app-version }}
+      artifact-name:
+        description: Uploaded artifact name
+        value: ${{ jobs.build.outputs.artifact-name }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Windows x64
+    runs-on: windows-latest
+    outputs:
+      app-version: ${{ steps.version.outputs.version }}
+      artifact-name: CodexRemoteBootstrap-Windows-x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read app version
+        id: version
+        shell: pwsh
+        run: |
+          $text = Get-Content -Raw CMakeLists.txt
+          if ($text -notmatch 'project\(\s*CodexRemoteBootstrap\s+VERSION\s+(\d+\.\d+\.\d+)') {
+            throw "Unable to parse VERSION from CMakeLists.txt"
+          }
+          $version = $Matches[1]
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "CMake VERSION is $version"
+
+      - name: Install Qt 6.8.3 MSVC 2022
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: qtshadertools
+          cache: true
+          cache-key-prefix: qt-6.8.3-win64-msvc2022
+
+      - name: Configure CMake
+        shell: pwsh
+        run: |
+          cmake -S . -B build `
+            -G "Visual Studio 17 2022" `
+            -A x64 `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+
+      - name: Build Release
+        shell: pwsh
+        run: cmake --build build --config Release --parallel
+
+      - name: Package portable ZIP
+        shell: pwsh
+        run: |
+          ./scripts/package-windows.ps1 `
+            -BuildDir "./build" `
+            -SourceDir "." `
+            -Config "Release" `
+            -ZipName "CodexRemoteBootstrap-Windows-x64.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodexRemoteBootstrap-Windows-x64
+          path: |
+            artifacts/CodexRemoteBootstrap-Windows-x64.zip
+            artifacts/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14

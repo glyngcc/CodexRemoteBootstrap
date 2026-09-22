@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-windows.yml
+
+  release:
+    name: GitHub Release
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check tag matches CMake version
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+          CMAKE_VERSION: ${{ needs.build.outputs.app-version }}
+        run: |
+          $tag = $env:TAG_NAME
+          $cmake = $env:CMAKE_VERSION
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
+            throw "Release tag must look like v0.4.0, got: $tag"
+          }
+          $expected = $tag.Substring(1)
+          if ($expected -ne $cmake) {
+            throw "Tag $tag does not match CMake VERSION $cmake. Update project(... VERSION ...) in CMakeLists.txt before tagging."
+          }
+          Write-Host "Version check passed: tag $tag == CMake $cmake"
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: CodexRemoteBootstrap-Windows-x64
+          path: release-files
+
+      - name: Rename release assets
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          $tag = $env:TAG_NAME
+          $srcZip = "release-files/CodexRemoteBootstrap-Windows-x64.zip"
+          if (-not (Test-Path -LiteralPath $srcZip)) {
+            throw "Build artifact ZIP not found: $srcZip"
+          }
+          $dstName = "CodexRemoteBootstrap-$tag-Windows-x64.zip"
+          $dstZip = Join-Path "release-files" $dstName
+          Move-Item -LiteralPath $srcZip -Destination $dstZip -Force
+          $hash = (Get-FileHash -LiteralPath $dstZip -Algorithm SHA256).Hash
+          Set-Content -LiteralPath "release-files/SHA256SUMS.txt" -Value "$hash  $dstName" -Encoding ascii
+          Write-Host "Release asset: $dstName"
+          Write-Host "$hash  $dstName"
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.ref_name }}
+        shell: pwsh
+        run: |
+          $tag = $env:TAG_NAME
+          $zip = "release-files/CodexRemoteBootstrap-$tag-Windows-x64.zip"
+          $sums = "release-files/SHA256SUMS.txt"
+          gh release create $tag `
+            --title "Codex Remote Bootstrap $tag" `
+            --generate-notes `
+            $zip `
+            $sums
